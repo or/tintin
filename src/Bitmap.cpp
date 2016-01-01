@@ -11,8 +11,7 @@ using std::ios;
 Bitmap::Bitmap(const char *fileName)
        :_isValid(false),
         _fileName(fileName),
-        _bitmap(NULL)
-{
+        _bitmap(NULL) {
   ifstream file(fileName, ios::in | ios::binary);
   if (!file.is_open()) {
     printf("    Error: couldn't open file '%s'\n", fileName);
@@ -64,21 +63,17 @@ Bitmap::Bitmap(const char *fileName)
 }
 
 
-
 Bitmap::Bitmap(int width, int height)
        :_isValid(false),
         _width(width),
-        _height(height)
-{
+        _height(height) {
   _bitmap = new unsigned char[3 * width * height];
   memset(_bitmap, 0, 3 * width * height);
   _isValid = true;
 }
 
 
-
-Bitmap::~Bitmap()
-{
+Bitmap::~Bitmap() {
   if (_bitmap != NULL) {
     delete[] _bitmap;
     _bitmap = NULL;
@@ -86,53 +81,37 @@ Bitmap::~Bitmap()
 }
 
 
-
-bool Bitmap::isValid() const
-{
+bool Bitmap::isValid() const {
   return _isValid;
 }
 
 
-
-int Bitmap::getWidth() const
-{
+int Bitmap::getWidth() const {
   return _width;
 }
 
 
-
-int Bitmap::getHeight() const
-{
+int Bitmap::getHeight() const {
   return _height;
 }
 
 
-
-unsigned char *Bitmap::getBitmapData()
-{
+unsigned char *Bitmap::getBitmapData() {
   return _bitmap;
 }
 
 
-
-void Bitmap::setFileName(const char *fileName)
-{
+void Bitmap::setFileName(const char *fileName) {
   _fileName = fileName;
 }
 
 
-
-const char *Bitmap::getFileName() const
-{
+const char *Bitmap::getFileName() const {
   return _fileName.c_str();
 }
 
 
-
-shared_ptr<Bitmap> Bitmap::reduce(int factor)
-{
-  /*int reducedWidth = (_width + factor / 2) / factor;
-  int reducedHeight = (_height + factor / 2) / factor;*/
+shared_ptr<Bitmap> Bitmap::reduce(int factor) {
   int reducedWidth = _width / factor;
   int reducedHeight = _height / factor;
   if (reducedWidth == 0) {
@@ -173,9 +152,7 @@ shared_ptr<Bitmap> Bitmap::reduce(int factor)
 }
 
 
-
-bool Bitmap::save(const char *fileName)
-{
+bool Bitmap::save(const char *fileName) {
   ofstream outputFile(fileName, ios::out | ios::binary);
   if (!outputFile.is_open()) {
     printf("    Error: couldn't open file '%s'\n", fileName);

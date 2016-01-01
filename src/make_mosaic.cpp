@@ -23,8 +23,7 @@ typedef struct {
   shared_ptr<Bitmap> bitmap;
 } Tile;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   if (argc < 3) {
     printf("need <master file> <file list>\n");
     return -1;
@@ -106,7 +105,6 @@ int main(int argc, char *argv[])
       x = it->first;
       y = it->second;
     }
-    //printf("%d %d\n", x, y);
 
     vector<unsigned int > fitList;
     vector<unsigned int> errorList;
@@ -138,7 +136,6 @@ int main(int argc, char *argv[])
       }
       error += 5 * usedTilesList[i];
 
-      //printf("%d\n", error);
       unsigned int j = 0;
       while (j < errorList.size()) {
         if (errorList[j] > error) {
@@ -156,7 +153,7 @@ int main(int argc, char *argv[])
         errorList.pop_back();
         fitList.pop_back();
       }
-    }/**/
+    }
 
     unsigned int winnerInd = fitList[rand() % 10];
     if (usedTilesList[winnerInd] == 0) {
@@ -181,7 +178,6 @@ int main(int argc, char *argv[])
     }
 
     if (hits % 100 == 0) {
-      //printf("%.3f%%\n", 100.0 * hits / maxHits);
       printf("\r%.01f%%", 100.0 - 100.0 * openSpots.size() / maxOpenSpots);
       fflush(stdout);
     }
@@ -216,7 +212,6 @@ int main(int argc, char *argv[])
         outPtr[0] = (unsigned char)((1.0 - inAlpha) * smallPtr[0] + inAlpha * inPtr[0]);
         outPtr[1] = (unsigned char)((1.0 - inAlpha) * smallPtr[1] + inAlpha * inPtr[1]);
         outPtr[2] = (unsigned char)((1.0 - inAlpha) * smallPtr[2] + inAlpha * inPtr[2]);
-        //printf("%d %d %d\n", (int)smallPtr[0], (int)smallPtr[1], (int)smallPtr[2]);
       }
     }
   }
@@ -275,7 +270,6 @@ int main(int argc, char *argv[])
         outPtr[0] = (unsigned char)((1.0 - inAlpha) * smallPtr[0] + inAlpha * inPtr[0]);
         outPtr[1] = (unsigned char)((1.0 - inAlpha) * smallPtr[1] + inAlpha * inPtr[1]);
         outPtr[2] = (unsigned char)((1.0 - inAlpha) * smallPtr[2] + inAlpha * inPtr[2]);
-        //printf("%d %d %d\n", (int)smallPtr[0], (int)smallPtr[1], (int)smallPtr[2]);
       }
     }
 

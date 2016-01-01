@@ -1,35 +1,31 @@
 #include <stdio.h>
 
+#include <algorithm>
 #include <fstream>
 #include <map>
 #include <vector>
 
-#include <CImg.h>
+#include "CImg.h"
 
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define MINDIMS 50
+#define AURA 6
 
-#define MINDIMS   50
-#define AURA       6
-
-using namespace cimg_library;
+using cimg_library::CImg;
+using cimg_library::CImgIOException;
 
 typedef struct {
   int left, top, right, bottom;
 } Box;
 
-inline bool pixel_matches(unsigned char *source, unsigned char *colour, int tolerance)
-{
+inline bool pixel_matches(unsigned char *source, unsigned char *colour, int tolerance) {
   int diff = abs(source[0] - colour[0]) + abs(source[1] - colour[1]) + abs(source[2] - colour[2]);
   return diff <= 3 * tolerance;
 }
 
 
-
 Box find_box(CImg<unsigned char> &img, unsigned char *map, int x, int y,
              unsigned char *border_colour, int tolerance, int aura,
-             unsigned char *seenBuf)
-{
+             unsigned char *seenBuf) {
   Box box = { x, y, x, y };
   int width = img.width();
   int height = img.height();
@@ -42,32 +38,7 @@ Box find_box(CImg<unsigned char> &img, unsigned char *map, int x, int y,
     looseEnds.erase(looseEnds.begin());
     int pos_x = value % width;
     int pos_y = value / width;
-    //printf("%d\n", looseEnds.size());
-    /*bool isAtEdge = false;
-    for (int j = -1; j <= 1 && !isAtEdge; ++j) {
-      for (int i = -1; i <= 1 && !isAtEdge; ++i) {
-        if (map[(pos_y + i) * width + pos_x + j] == 0) {
-          isAtEdge = true;
-        }
-      }
-    }
-    if (!isAtEdge) {
-      continue;
-    }*/
-    /*int touchingEnds = 0;
-    for (int j = -1; j <= 1; ++j) {
-      for (int i = -1; i <= 1; ++i) {*/
-        /*if (seenBuf[(pos_y + i) * width + pos_x + j] == 0) {
-          isAtEdge = true;
-        }*/
-        /*if (looseEnds.find((pos_y + i) * width + pos_x + j) != looseEnds.end()) {
-          ++touchingEnds;
-        }*/
-      /*}
-    }*/
-    /*if (!touchingEnds > 8) {
-      continue;
-    }*/
+
     for (int j = -aura; j <= aura; ++j) {
       for (int i = -aura; i <= aura; ++i) {
         int px = pos_x + i;
@@ -86,17 +57,10 @@ Box find_box(CImg<unsigned char> &img, unsigned char *map, int x, int y,
           continue;
         }
 
-        /*if (abs(px - box.left) < aura ||
-            abs(px - box.right) < aura ||
-            abs(py - box.top) < aura ||
-            abs(py - box.bottom) < aura) {
-          looseEnds[pos] = true;
-        }*/
-
-        box.left = MIN(px, box.left);
-        box.right = MAX(px, box.right);
-        box.top = MIN(py, box.top);
-        box.bottom = MAX(py, box.bottom);
+        box.left = std::min(px, box.left);
+        box.right = std::max(px, box.right);
+        box.top = std::min(py, box.top);
+        box.bottom = std::max(py, box.bottom);
 
         bool isAtEdge = false;
         for (int m = -1; m <= 1 && !isAtEdge; ++m) {
@@ -114,13 +78,7 @@ Box find_box(CImg<unsigned char> &img, unsigned char *map, int x, int y,
           continue;
         }
 
-        /*if ((px - 1 >= 0 && map[pos - 1] == 1) ||
-            (px + 1 < width && map[pos + 1] == 1) ||
-            (py - 1 >= 0 && map[pos - width] == 1) ||
-            (py + 1 < height && map[pos + width] == 1)) {*/
-
-          looseEnds[pos] = true;
-        //}
+        looseEnds[pos] = true;
       }
     }
   }
@@ -128,9 +86,7 @@ Box find_box(CImg<unsigned char> &img, unsigned char *map, int x, int y,
 }
 
 
-
-std::vector<Box> scan_for_panels(CImg<unsigned char> &img)
-{
+std::vector<Box> scan_for_panels(CImg<unsigned char> &img) {
   std::vector<Box> boxList;
   int width = img.width();
   int height = img.height();
@@ -152,9 +108,7 @@ std::vector<Box> scan_for_panels(CImg<unsigned char> &img)
   }
 
   for (int y = 0; y < height - MINDIMS + 2; ++y) {
-    //printf("pos: %d\n", y);
     for (int x = 0; x < width - MINDIMS + 2; ++x) {
-      //printf("pos: %d, %d\n", x, y);
       if (map[y * width + x] == 0) {
         continue;
       }
@@ -169,10 +123,6 @@ std::vector<Box> scan_for_panels(CImg<unsigned char> &img)
       }
 
       for (int j = box.top; j <= box.bottom; ++j) {
-        /*for (unsigned char *ptr = covered + box.top * width;
-                          ptr <= covered + box.bottom * width;
-                          ptr += width) {
-                          */
         memset(covered + j * width + box.left, 1, box.right - box.left + 1);
       }
       boxList.push_back(box);
@@ -185,8 +135,7 @@ std::vector<Box> scan_for_panels(CImg<unsigned char> &img)
   return boxList;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   if (argc < 3) {
     printf("need <outfile> <infile> [<infile> ...]\n");
     return -1;
@@ -219,7 +168,9 @@ int main(int argc, char *argv[])
     }
 
     ++i;
-    printf("    got %d. -- %.3f%%\n", boxList.size(), 100.0 * (i - 1) / (argc - 1));
+    printf("    got %d. -- %.3f%%\n",
+           static_cast<unsigned int>(boxList.size()),
+           100.0 * (i - 1) / (argc - 1));
   }
 
   outFile.close();

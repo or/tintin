@@ -5,14 +5,14 @@
 #include <string>
 #include <vector>
 
-#include <CImg.h>
+#include "CImg.h"
 
-#define WHITE_THRESHOLD   220
+#define WHITE_THRESHOLD 220
 
-using namespace cimg_library;
+using cimg_library::CImg;
+using cimg_library::CImgIOException;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   if (argc < 2) {
     printf("need <infile> [<infile> ...]\n");
     return -1;
@@ -33,8 +33,7 @@ int main(int argc, char *argv[])
               pixel[1] >= WHITE_THRESHOLD &&
               pixel[2] >= WHITE_THRESHOLD) {
             ++white;
-          }
-          else {
+          } else {
             red += (int)pixel[0];
             green += (int)pixel[1];
             blue += (int)pixel[2];
@@ -48,8 +47,7 @@ int main(int argc, char *argv[])
       printf("('%s', (%d, %d, %d), %.3f)\n",
              argv[i], red / non_white, green / non_white, blue / non_white,
              100.0 * white / numPixels);
-    }
-    catch (CImgIOException &e) {
+    } catch (CImgIOException &e) {
       printf("    Error: %s\n", e.what());
     }
 
