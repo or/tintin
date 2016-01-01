@@ -1,5 +1,12 @@
 #include <string.h>
+#include <memory>
+
 #include "Bitmap.h"
+
+using std::shared_ptr;
+using std::ifstream;
+using std::ofstream;
+using std::ios;
 
 Bitmap::Bitmap(const char *fileName)
        :_isValid(false),
@@ -122,7 +129,7 @@ const char *Bitmap::getFileName() const
 
 
 
-SmartPointer<Bitmap> Bitmap::reduce(int factor)
+shared_ptr<Bitmap> Bitmap::reduce(int factor)
 {
   /*int reducedWidth = (_width + factor / 2) / factor;
   int reducedHeight = (_height + factor / 2) / factor;*/
@@ -134,7 +141,7 @@ SmartPointer<Bitmap> Bitmap::reduce(int factor)
   if (reducedHeight == 0) {
     reducedHeight = 1;
   }
-  SmartPointer<Bitmap> reduced = new Bitmap(reducedWidth, reducedHeight);
+  shared_ptr<Bitmap> reduced(new Bitmap(reducedWidth, reducedHeight));
   reduced->setFileName(_fileName.c_str());
   unsigned char *reducedBuf = reduced->getBitmapData();
   for (int y = 0; y < reducedHeight; ++y) {

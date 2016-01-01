@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -12,9 +13,14 @@
 
 #include "Bitmap.h"
 
+using std::pair;
+using std::set;
+using std::vector;
+using std::shared_ptr;
+
 typedef struct {
   int x, y;
-  SmartPointer<Bitmap> bitmap;
+  shared_ptr<Bitmap> bitmap;
 } Tile;
 
 int main(int argc, char *argv[])
@@ -34,7 +40,7 @@ int main(int argc, char *argv[])
   }
   ++param;
 
-  vector< SmartPointer<Bitmap> > bitmapList;
+  vector< shared_ptr<Bitmap> > bitmapList;
   std::ifstream fileList(argv[param], std::ios::in);
   if (!fileList.is_open()) {
     printf("couldn't open '%s'...\n", argv[param]);
@@ -55,7 +61,7 @@ int main(int argc, char *argv[])
     if (bmp.getWidth() < factor || bmp.getHeight() < factor) {
       continue;
     }
-    SmartPointer<Bitmap> newBitmap(bmp.reduce(factor));
+    shared_ptr<Bitmap> newBitmap(bmp.reduce(factor));
     if (!newBitmap->isValid()) {
       printf("couldn't open '%s'...\n", line.c_str());
       continue;
@@ -152,14 +158,12 @@ int main(int argc, char *argv[])
       }
     }/**/
 
-    //SmartPointer<Bitmap> winner = bitmapList[rand() % (unsigned int)bitmapList.size()];
-    //SmartPointer<Bitmap> winner = fitList[rand() % (unsigned int)fitList.size()];
     unsigned int winnerInd = fitList[rand() % 10];
     if (usedTilesList[winnerInd] == 0) {
       ++uniqueTiles;
     }
     ++usedTilesList[winnerInd];
-    SmartPointer<Bitmap> winner = bitmapList[winnerInd];
+    shared_ptr<Bitmap> winner = bitmapList[winnerInd];
     Tile tile = {x, y, winner};
     tileList.push_back(tile);
 

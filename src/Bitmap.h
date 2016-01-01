@@ -5,12 +5,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#include <string>
+#include <memory>
 #include <fstream>
-
-#include "SmartPointer.h"
-
-using namespace std;
+#include <string>
 
 #pragma pack(1)
 
@@ -32,7 +29,7 @@ typedef struct {
   unsigned int numColoursImportant;
 } BITMAPHEADER;
 
-class Bitmap : public SmartPointerBase {
+class Bitmap {
 public:
   Bitmap(const char *fileName);
   Bitmap(int width, int height);
@@ -46,11 +43,11 @@ public:
   const char *getFileName() const;
   bool save(const char *fileName);
 
-  SmartPointer<Bitmap> reduce(int factor);
+  std::shared_ptr<Bitmap> reduce(int factor);
 
 private:
   bool _isValid;
-  string _fileName;
+  std::string _fileName;
   int _width, _height;
   unsigned char *_bitmap;
 };
