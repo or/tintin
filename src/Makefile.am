@@ -1,7 +1,7 @@
 #CFLAGS =
 #CPPFLAGS =
 #CXXFLAGS =
-CXXFLAGS = -Wall -O3 -fexpensive-optimizations \
+AM_CXXFLAGS = -Wall -O3 -fexpensive-optimizations \
            -finline-functions -foptimize-register-move \
            -funroll-loops -fomit-frame-pointer \
            -march=native -fforce-addr -frerun-cse-after-loop \
@@ -10,9 +10,9 @@ CXXFLAGS = -Wall -O3 -fexpensive-optimizations \
 #CXXFLAGS = -S -g
 #AM_CXXFLAGS = -pg -g
 
-INCLUDES = -I/home/thi/projects/shared/include
+AM_CPPFLAGS = -I/home/thi/projects/shared/include
 LIBS =
-LDFLAGS = -s -fwhole-program
+AM_LDFLAGS = -s -fwhole-program
 
 bin_PROGRAMS = panel_boxes filter_panels make_mosaic
 
