@@ -1,3 +1,4 @@
+#include <string.h>
 #include "Bitmap.h"
 
 Bitmap::Bitmap(const char *fileName)
