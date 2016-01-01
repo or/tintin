@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
       continue;
     }
     ++count;
-    printf("opening '%s'...\n", line.c_str());
+    //printf("opening '%s'...\n", line.c_str());
     Bitmap bmp(line.c_str());
     if (bmp.getWidth() < factor || bmp.getHeight() < factor) {
       continue;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     bitmapList.push_back(newBitmap);
   }
   fileList.close();
-  printf("got %d tile images\n", bitmapList.size());
+  printf("got %d tile images\n", static_cast<unsigned int>(bitmapList.size()));
 
   set< pair<int, int> > openSpots;
   for (int y = -3; y < inputBitmap.getHeight(); ++y) {
@@ -176,13 +176,15 @@ int main(int argc, char *argv[])
       break;
     }
 
-    if (hits % 1000 == 0) {
+    if (hits % 100 == 0) {
       //printf("%.3f%%\n", 100.0 * hits / maxHits);
-      printf("%.3f%%\n", 100.0 - 100.0 * openSpots.size() / maxOpenSpots);
+      printf("\r%.01f%%", 100.0 - 100.0 * openSpots.size() / maxOpenSpots);
+      fflush(stdout);
     }
   }
-  printf("done.\n");
-  printf("had %d hits, used %d/%d unique tiles\n", hits, uniqueTiles, bitmapList.size());
+  printf("\rdone.    \n");
+  printf("had %d hits, used %d/%d unique tiles\n",
+         hits, uniqueTiles, static_cast<unsigned int>(bitmapList.size()));
 
   printf("starting preview...\n");
   double inAlpha = 0.1;
@@ -273,11 +275,13 @@ int main(int argc, char *argv[])
       }
     }
 
-    if (i % 500 == 0) {
-      printf("%.3f%%\n", 100.0 * i / tileList.size());
+    if (i % 50 == 0) {
+      printf("\r%.01f%%", 100.0 * i / tileList.size());
+      fflush(stdout);
     }
   }
   outputBitmap.save("mosaic_result.bmp");
+  printf("\rdone.     \n");
 
   return 0;
 }
