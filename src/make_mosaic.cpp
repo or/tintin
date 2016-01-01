@@ -50,9 +50,7 @@ int main(int argc, char *argv[])
       continue;
     }
     ++count;
-    if (count % 1 != 0) {
-      continue;
-    }
+    printf("opening '%s'...\n", line.c_str());
     Bitmap bmp(line.c_str());
     if (bmp.getWidth() < factor || bmp.getHeight() < factor) {
       continue;
