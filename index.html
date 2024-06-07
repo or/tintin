@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Tintin Mosaic</title>
+</head>
+<body style="margin:0; padding:0; background-color:#000;">
+  <div id="seadragon"></div>
+<script src="openseadragon/openseadragon.min.js"></script>
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "seadragon",
+        prefixUrl: "openseadragon/images/",
+        tileSources: "tintin.dzi"
+    });
+</script>
+</body>
+</html>
