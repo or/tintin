@@ -33,7 +33,8 @@ all/page_2.jpg: [[267, 17, 621, 352], [26, 18, 254, 350], [633, 18, 1092, 351], 
  * `make_mosaic` gets an input image (in BMP format) and a text file with one path per line to the input tile BMPs, the
    latter can be generated via `find good_panels/small -iname '*.bmp' > input_files.txt`
 
-Finally for the demo display the script `generate_deepzoom_tiles.py` in the branch
-https://github.com/or/tintin/tree/gh-pages generates the files for https://github.com/openseadragon/openseadragon to
-display the result on http://or.github.io/tintin.
+Finally for the demo display the script `generate_deepzoom_tiles.py` generates the deep zoom tiles (`tintin.dzi` and
+`tintin_files/`) for https://github.com/openseadragon/openseadragon to display the result on http://or.github.io/tintin.
+The viewer page is `web/index.html`; it gets deployed together with the tiles and OpenSeadragon to the root of the
+branch https://github.com/or/tintin/tree/gh-pages.
 
